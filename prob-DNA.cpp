@@ -6,16 +6,15 @@ using namespace std;
 
 int T, M, N;
 int countArr[4][1000]; // A C G T
+int totalHamming;
 string DNA[1000];
-string standard;
+string representDNA;
 
 // Function to find the representative sequence
-// The representative sequence is the most common character in the sequence 
+// The representative sequence is the most common character in the sequence
 // (if it is the same, it is alphabetically preceded)
-string func1()
+void func()
 {
-	string ret = "";
-
 	// Investigate the number of times each sequence character appears
 	for (int i = 0; i < M; i++)
 	{
@@ -50,40 +49,21 @@ string func1()
 		switch (tmp3)
 		{
 			case 0:
-				ret += 'A';
+				representDNA += 'A';
 				break;
 			case 1:
-				ret += 'C';
+				representDNA += 'C';
 				break;
 			case 2:
-				ret += 'G';
+				representDNA += 'G';
 				break;
 			case 3:
-				ret += 'T';
+				representDNA += 'T';
 				break;
 		}
+
+		totalHamming += (M - countArr[tmp3][i]);
 	}
-
-	return standard = ret;
-}
-
-// Find Sum of Hamming distance
-int func2()
-{
-	int ret = 0;
-
-	for (int i = 0; i < M; i++)
-	{
-		int tmp = 0;
-
-		for (int j = 0; j < N; j++)
-			if (standard[j] != DNA[i][j])
-				tmp++;
-		
-		ret += tmp;
-	}
-
-	return ret;
 }
 
 int main()
@@ -95,15 +75,19 @@ int main()
 
 	while (T--)
 	{
+		representDNA = "";
+		totalHamming = 0;
 		memset(countArr, 0, sizeof(countArr));
+
 		// Number of Sequence, Length of Sequence
 		cin >> M >> N;
 
 		for (int i = 0; i < M; i++)
 			cin >> DNA[i];
 
-		cout << func1() << "\n";
-		cout << func2() << "\n";
+		func();
+
+		cout << representDNA << "\n" << totalHamming << "\n";
 	}
 
 	return 0;
