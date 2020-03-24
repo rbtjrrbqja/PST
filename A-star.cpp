@@ -10,7 +10,7 @@ const int MAP_SIZE = 10;
 
 class Node {
 private:
-	int x, y, g, h, f;
+	int x, y, f;
 	// x, y is index position of map array
 	// g is distance from start position
 	// h is distance from destination
@@ -24,13 +24,11 @@ private:
 	// parent node of this node
 
 public:
-	Node(int x, int y) : x(x), y(y), g(0), h(0), f(0), open(false), closed(false), parent(NULL) { };
-	Node(int x, int y, int g, int h, Node* parent = NULL) : x(x), y(y), g(g), h(h), f(g + h), open(false), closed(false), parent(parent) { }
+	Node(int x, int y) : x(x), y(y), f(0), open(false), closed(false), parent(NULL) { };
+	Node(int x, int y, int f, Node* parent = NULL) : x(x), y(y), f(f), open(false), closed(false), parent(parent) { }
 	// initializer
 
-	void SetG (int n)        { g = n; }
-	void SetH (int n)        { h = n; }
-	void SetF ()             { f = g + h; }
+	void SetF (int n)        { f = n; }
 	void SetXY(int n, int m) { x = n; y = m; }
 	void SetO(bool n)        { open = n; }
 	void SetC(bool n)        { closed = n; }
@@ -40,8 +38,6 @@ public:
 	int   GetY() { return y; }
 	bool  GetO() { return open; }
 	bool  GetC() { return closed; }
-	int   GetG() { return g; }
-	int   GetH() { return h; }
 	int   GetF() { return f; }
 	Node* GetP() { return parent; }
 
@@ -124,14 +120,12 @@ bool FindPath(int endX, int endY)
 				if (mapArr[nx][ny] == 1 || nodeArr[nx][ny]->GetC())
 					continue;
 
+				int newF = CalDis(current->GetX(), current->GetY(), nx, ny) + CalDis(nx, ny, endX, endY);
+
 				// new path to neighbour is shorter or neighbour is not in OPEN
-				if (!nodeArr[nx][ny]->GetO() ||
-					(nodeArr[nx][ny]->GetO() &&
-						nodeArr[nx][ny]->GetF() > CalDis(current->GetX(), current->GetY(), nx, ny) + CalDis(nx, ny, endX, endY)))
+				if (!nodeArr[nx][ny]->GetO() || (nodeArr[nx][ny]->GetO() && nodeArr[nx][ny]->GetF() > newF))
 				{
-					nodeArr[nx][ny]->SetG(CalDis(current->GetX(), current->GetY(), nx, ny));
-					nodeArr[nx][ny]->SetH(CalDis(nx, ny, endX, endY));
-					nodeArr[nx][ny]->SetF();
+					nodeArr[nx][ny]->SetF(newF);
 					nodeArr[nx][ny]->SetP(current);
 					// set f of neighbour
 					// set parent of neighbour to current
@@ -172,7 +166,7 @@ int main()
 	cout << "End : ";
 	cin >> endX >> endY;
 
-	Node* start = new Node(startX, startY, 0, CalDis(startX, startY, endX, endY));
+	Node* start = new Node(startX, startY, CalDis(startX, startY, endX, endY));
 	open.push(start);
 	start->SetO(true);
 
