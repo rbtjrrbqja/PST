@@ -8,43 +8,26 @@ using namespace std;
 typedef pair<int, int> Pair;
 
 string itemName;
-int T, n, startTime, endTime, cache[10001];
+int T, n, startTime, endTime;
 vector<Pair> timeTable;
 vector<Pair> tmpArr;
 
 // compare function for vector<Pair> sort
 bool cmp(Pair a, Pair b)
 {
-	if (a.first == b.first)
-		return a.second < b.second;
+	if (a.second == b.second)
+		return a.first < b.first;
 
-	return a.first < b.first;
+	return a.second < b.second;
 }
 
-int func(int index)
+int func()
 {
-	// out of range
-	if (index >= n)
-		return 0;
-
-	int& ret = cache[index];
-
-	if (ret != -1)
-		return ret;
-
-	ret = 0;
-
-	for (int i = index; i < timeTable.size(); i++)
-	{
+	for (int i = 0; i < n; i++)
 		if (tmpArr.empty() || tmpArr.back().second <= timeTable[i].first)
-		{
 			tmpArr.push_back(timeTable[i]);
-			ret = max(ret, func(i + 1) + 1);
-			tmpArr.pop_back();
-		}
-	}
-
-	return ret;
+	
+	return (int)tmpArr.size();
 }
 
 int main()
@@ -56,8 +39,7 @@ int main()
 	{
 		cin >> n;
 
-		// cache, vectors initialization
-		memset(cache, -1, sizeof(cache));
+		// vectors initialization
 		timeTable.clear();
 		tmpArr.clear();
 
@@ -69,7 +51,8 @@ int main()
 		}
 
 		sort(timeTable.begin(), timeTable.end(), cmp);
-		cout << func(0) << endl;
+
+		cout << func() << endl;
 	}
 
 	return 0;
