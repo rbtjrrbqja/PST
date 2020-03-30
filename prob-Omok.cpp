@@ -7,18 +7,13 @@ using namespace std;
 typedef pair<int, int> Pair;
 
 int T, x, y;
-int board[16][16];
+
+// ë³´ë“œì˜ í¬ê¸°ë¥¼ 2ì”© ë” ëŠ˜ë ¤ì„œ ê°’ì²´í¬ë¥¼ í•˜ê²Œë˜ë©´ ë³„ë„ì˜ index ì²´í¬ê°€ ì—†ì–´ë„ ëœë‹¤
+int board[17][17];
 
 const int nextX[8] = { 0,  1, 1, 1, 0, -1, -1, -1};
 const int nextY[8] = {-1, -1, 0, 1, 1,  1,  0, -1};
 
-bool CheckIndex(int x, int y)
-{
-	if (x < 1 || y < 1 || x > 15 || y > 15)
-		return false;
-
-	return true;
-}
 
 int main()
 {
@@ -32,19 +27,19 @@ int main()
 
 		vector<Pair> position(1, Pair{ 0, 0 });
 
-		// vector¿¡ ¹ÙµÏµ¹ À§Ä¡Á¤º¸ insert
+		// vectorì— ë°”ë‘‘ëŒ ìœ„ì¹˜ì •ë³´ insert
 		for (int i = 1; i <= 225; i++)
 		{
 			cin >> x >> y;
 			position.push_back(Pair{x, y});
 		}
 
-		// vector ¸¦ ¼øÈ¸ÇÏ¸ç board¿¡ ÀÔ·ÂÈÄ ¿À¸ñ È®ÀÎ
+		// vector ë¥¼ ìˆœíšŒí•˜ë©° boardì— ì…ë ¥í›„ ì˜¤ëª© í™•ì¸
 		for (int i = 1; i <= 225; i++)
 		{
 			char turn;
 
-			// °ËÀºµ¹ : 1, Èòµ¹ : 2
+			// ê²€ì€ëŒ : 1, í°ëŒ : 2
 			if (i % 2 == 1)
 			{
 				board[position[i].first][position[i].second] = 1;
@@ -56,24 +51,21 @@ int main()
 				turn = 'W';
 			}
 
-			// ÇöÀç µĞ µ¹
+			// í˜„ì¬ ë‘” ëŒ
 			int current = board[position[i].first][position[i].second];
 
-			// °¢ ¹æÇâÀÇ ¿¬¼ÓµÈ µ¹ÀÇ °³¼ö
+			// ê° ë°©í–¥ì˜ ì—°ì†ëœ ëŒì˜ ê°œìˆ˜
 			int dir[4] = { 1, 1, 1, 1 };
 
-			// 8¹æÇâ ·çÇÁ
+			// 8ë°©í–¥ ë£¨í”„
 			for (int j = 0; j < 8; j++)
 			{
 				int curX = position[i].first;
 				int curY = position[i].second;
 
-				while (CheckIndex(curX + nextX[j], curY + nextY[j]))
+				while (board[curX + nextX[j]][curY + nextY[j]] == current)
 				{
-					if (board[curX + nextX[j]][curY + nextY[j]] == current)
-						dir[j % 4]++;
-					else
-						break;
+					dir[j % 4]++;
 
 					curX = curX + nextX[j];
 					curY = curY + nextY[j];
